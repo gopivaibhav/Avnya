@@ -1,12 +1,18 @@
-import { useEffect, useRef, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import HeroSection from "@/components/home/HeroSection"
 import IndustriesSection from "@/components/home/IndustriesSection"
 import OffersSection from "@/components/home/OffersSection"
 import ServicesSection from "@/components/home/ServicesSection"
 import StrengthsSection from "@/components/home/StrengthsSection"
 
+
+interface ScrollRevealProps {
+  children: ReactNode;
+  delay?: number;
+}
+
 // Wrapper component for scroll animations
-const ScrollReveal = ({ children, delay = 0 }) => {
+const ScrollReveal = ({ children, delay = 0 }: ScrollRevealProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef(null);
 
