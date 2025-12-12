@@ -1,4 +1,5 @@
 import React from 'react';
+import img from '../assets/img.webp';
 
 const ProjectsSection = () => {
   const clients = [
@@ -15,7 +16,10 @@ const ProjectsSection = () => {
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center text-slate-400 mb-12 sm:mb-16 mt-10">
           Projects & Clients
         </h2>
-        
+        <div className='flex flex-col justify-center items-center '>
+                  <img src={img} alt="image" className='rounded-xl'/>
+
+        </div>
         <div className="mb-16 sm:mb-20">
           <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-6 sm:mb-8 text-center">Key Clients</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">

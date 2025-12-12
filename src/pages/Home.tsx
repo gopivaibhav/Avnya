@@ -1,9 +1,55 @@
+import { useEffect, useRef, useState } from 'react';
 import HeroSection from "@/components/home/HeroSection"
 import IndustriesSection from "@/components/home/IndustriesSection"
 import OffersSection from "@/components/home/OffersSection"
 import ServicesSection from "@/components/home/ServicesSection"
 import StrengthsSection from "@/components/home/StrengthsSection"
 
+// Wrapper component for scroll animations
+const ScrollReveal = ({ children, delay = 0 }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            setIsVisible(true);
+          }, delay);
+        }
+      },
+      {
+        threshold: 0.1, // Trigger when 10% of the element is visible
+        rootMargin: '0px 0px -100px 0px' // Start animation slightly before element comes into view
+      }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current);
+      }
+    };
+  }, [delay]);
+
+  return (
+    <div
+      ref={ref}
+      className={`transition-all duration-1000 ease-out ${
+        isVisible
+          ? 'opacity-100 translate-y-0'
+          : 'opacity-0 translate-y-16'
+      }`}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
+      {children}
+    </div>
+  );
+};
 
 const Home = () => {
   return (
@@ -82,12 +128,25 @@ const Home = () => {
         }
       `}</style>
       
+      {/* Hero section loads immediately */}
       <HeroSection />
-      <OffersSection />
-      <IndustriesSection />
-      <StrengthsSection />
-      <ServicesSection />
-
+      
+      {/* Other sections reveal on scroll */}
+      <ScrollReveal>
+        <OffersSection />
+      </ScrollReveal>
+      
+      <ScrollReveal delay={100}>
+        <IndustriesSection />
+      </ScrollReveal>
+      
+      <ScrollReveal delay={100}>
+        <StrengthsSection />
+      </ScrollReveal>
+      
+      <ScrollReveal delay={100}>
+        <ServicesSection />
+      </ScrollReveal>
     </div>
   )
 }

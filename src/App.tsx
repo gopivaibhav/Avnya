@@ -9,11 +9,31 @@ import Contact from "./pages/Contact";
 import AboutSection from "./pages/About";
 import ProjectsSection from "./pages/Projects";
 
-
-
 const Home = lazy(() => import("./pages/Home"));
 
-// Responsive component wrapper
+// Page wrapper with scroll animations
+const AnimatedPageWrapper = ({ children }: { children: React.ReactNode }) => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    // Trigger animation after component mounts
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 50);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <div
+      className={`transition-all duration-700 ease-out ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+      }`}
+    >
+      {children}
+    </div>
+  );
+};
 
 function App() {
   const [isInitialLoading, setIsInitialLoading] = useState(true);
@@ -48,17 +68,46 @@ function App() {
             </MainLayout>
           }
         >
-          <Route index element={<Home />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/about" element={<AboutSection />} />
-          <Route path="/project" element={<ProjectsSection />} />
-          
+          <Route 
+            index 
+            element={
+              <AnimatedPageWrapper>
+                <Home />
+              </AnimatedPageWrapper>
+            } 
+          />
+          <Route 
+            path="/contact" 
+            element={
+              <AnimatedPageWrapper>
+                <Contact />
+              </AnimatedPageWrapper>
+            } 
+          />
+          <Route 
+            path="/about" 
+            element={
+              <AnimatedPageWrapper>
+                <AboutSection />
+              </AnimatedPageWrapper>
+            } 
+          />
+          <Route 
+            path="/project" 
+            element={
+              <AnimatedPageWrapper>
+                <ProjectsSection />
+              </AnimatedPageWrapper>
+            } 
+          />
         </Route>
         <Route
           path="/404"
           element={
             <MainLayout>
-              <NotFound />
+              <AnimatedPageWrapper>
+                <NotFound />
+              </AnimatedPageWrapper>
             </MainLayout>
           }
         />
@@ -66,7 +115,9 @@ function App() {
           path="*"
           element={
             <MainLayout>
-              <NotFound />
+              <AnimatedPageWrapper>
+                <NotFound />
+              </AnimatedPageWrapper>
             </MainLayout>
           }
         />
