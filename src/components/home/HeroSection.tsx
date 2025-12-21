@@ -1,46 +1,128 @@
-import React from 'react';
-import { ChevronRight, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useInView } from 'framer-motion';
+import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
+
+import img1 from '../../assets/project1.png';
+import img2 from '../../assets/project2.png';
+import img3 from '../../assets/project3.png';
+import img4 from '../../assets/project4.png';
+import img5 from '../../assets/project5.png';
+import img6 from '../../assets/project6.png';
+
+const fadeIn = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      duration: 0.8,
+      ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
+    },
+  },
+};
 
 const HeroSection = () => {
+  const ref = useRef<HTMLElement>(null);
+  const isInView = useInView(ref, { once: true, margin: '-100px' });
+
+  const images = [img4, img5, img6, img1, img2, img3];
+  const captions = [
+    'Kurnool',
+    'Dhone',
+    'Nandyala',
+    'Kothur',
+    'Kothakota',
+    'Proddutur',
+  ];
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Auto slideshow
+  useEffect(() => {
+    const interval = setInterval(() => handleNext(), 5000);
+    return () => clearInterval(interval);
+  }, [currentIndex]);
+
+  const handleNext = () =>
+    setCurrentIndex((prev) => (prev + 1) % images.length);
+
+  const handlePrev = () =>
+    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 overflow-hidden">
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxNCAwIDYgMi42ODYgNiA2cy0yLjY4NiA2LTYgNi02LTIuNjg2LTYtNiAyLjY4Ni02IDYtNnoiIHN0cm9rZT0iIzFmMmQzZCIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9nPjwvc3ZnPg==')] opacity-10"></div>
-      
-      {/* Animated floating shapes */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-32 h-32 sm:w-64 sm:h-64 bg-amber-500/10 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-40 h-40 sm:w-80 sm:h-80 bg-orange-500/10 rounded-full blur-3xl animate-float-delayed"></div>
-      </div>
-      
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10 py-20 sm:py-0">
-        <div className="animate-fadeInUp">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight">
-            India's Premier<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">
-              Pre-Engineered Building
-            </span><br />
-            Solutions
-          </h1>
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 mb-8 sm:mb-12 max-w-4xl mx-auto px-4">
-            Delivering turnkey metal building systems with precision engineering, advanced design software, and on-time project execution.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center px-4">
-            <a
-              href="#contact"
-              className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-lg hover:from-amber-600 hover:to-orange-600 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-amber-500/50"
+    <motion.section
+      ref={ref}
+      id="gallery"
+      className="relative bg-gray-50 pt-24 overflow-hidden"
+      initial="hidden"
+      animate={isInView ? 'show' : 'hidden'}
+      variants={fadeIn}
+    >
+      {/* Slideshow Wrapper */}
+      <div className="relative w-full h-[80vh] overflow-hidden">
+        {/* Image Slider */}
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={currentIndex}
+            src={images[currentIndex]}
+            alt={`Gallery ${currentIndex + 1}`}
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.8, ease: 'easeInOut' }}
+            className="absolute top-0 left-0 w-full h-full object-cover"
+          />
+        </AnimatePresence>
+
+        {/* CENTER TEXT — ALWAYS VISIBLE */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+          className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none"
+        >
+          <div className="bg-transparent text-white px-4 sm:px-10 py-5 rounded-lg shadow-2xl backdrop-blur-md">
+            <p className="text-lg sm:text-2xl md:text-3xl uppercase tracking-widest font-semibold text-center">
+              Our Recent Projects
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Bottom Controls */}
+        <div className="absolute bottom-0 left-0 w-full flex justify-between items-end">
+          {/* Caption */}
+          <motion.div
+            key={currentIndex}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="bg-slate-900/95 px-8 py-4 shadow-xl"
+          >
+            <h3 className="text-white text-lg sm:text-2xl md:text-3xl font-semibold uppercase tracking-wide">
+              {captions[currentIndex]}
+            </h3>
+          </motion.div>
+
+          {/* Navigation */}
+          <div className="flex items-center bg-slate-900/95 px-6 py-3 shadow-lg gap-x-4">
+            <button
+              onClick={handlePrev}
+              className="text-white hover:opacity-80 transition"
+              aria-label="Previous Slide"
             >
-              Get a Quote <ArrowRight className="ml-2" size={20} />
-            </a>
-            <a
-              href="#projects"
-              className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-transparent border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-slate-900 transform hover:scale-105 transition-all duration-300"
+              <FaChevronLeft className="text-2xl" />
+            </button>
+
+            <button
+              onClick={handleNext}
+              className="text-white hover:opacity-80 transition"
+              aria-label="Next Slide"
             >
-              View Projects <ChevronRight className="ml-2" size={20} />
-            </a>
+              <FaChevronRight className="text-2xl" />
+            </button>
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 
