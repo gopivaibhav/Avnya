@@ -8,6 +8,7 @@ import NotFound from "./pages/NotFound";
 import Contact from "./pages/Contact";
 import AboutSection from "./pages/About";
 import ProjectsSection from "./pages/Projects";
+import FireServicePage from "./pages/FireService";
 
 const Home = lazy(() => import("./pages/Home"));
 
@@ -99,6 +100,14 @@ function App() {
                 <ProjectsSection />
               </AnimatedPageWrapper>
             } 
+          />
+          <Route
+            path="/fire-service"
+            element={
+              <AnimatedPageWrapper>
+                <FireServicePage />
+              </AnimatedPageWrapper>
+            }
           />
         </Route>
         <Route
