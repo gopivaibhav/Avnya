@@ -1,4 +1,4 @@
-import { Routes, Route, Outlet } from "react-router-dom";
+import { Routes, Route, Outlet, useLocation } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import MainLayout from "./components/layout/MainLayout";
 import { useState, useEffect } from "react";
@@ -11,6 +11,16 @@ import ProjectsSection from "./pages/Projects";
 import FireServicePage from "./pages/FireService";
 
 const Home = lazy(() => import("./pages/Home"));
+
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [pathname]);
+
+  return null;
+};
 
 // Page wrapper with scroll animations
 const AnimatedPageWrapper = ({ children }: { children: React.ReactNode }) => {
@@ -60,6 +70,7 @@ function App() {
         </div>
       }
     >
+      <ScrollToTop />
       <Routes>
         <Route
           path="/"
